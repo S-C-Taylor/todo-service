@@ -12,7 +12,6 @@ namespace Todo.Repository {
         }
 
         public SqlConnection GetOpenConnection() {
-            //string cs = config["Data:DefaultConnection:ConnectionString"];
             string cs = config.GetConnectionString("DefaultConnection");
             SqlConnection connection = new SqlConnection(cs);
             connection.Open();
