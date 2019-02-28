@@ -4,21 +4,23 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using Todo.Models;
+using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Todo.Repository
 {
-    public class TodoRepository : ITodoRepository {
-        public string connectionString { get; set; }
+    public class TodoRepository : BaseRepository, ITodoRepository {
+        //public string connectionString { get; set; }
 
-        public TodoRepository()
+        public TodoRepository(IConfiguration configuration) : base(configuration)
         {
-            connectionString = @"Server=localhost\SQLEXPRESS01;Database=TodoDB;Trusted_Connection=True;";
+            //connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         public IDbConnection Connection 
         {
             get {
-                return new SqlConnection(connectionString);
+                return GetOpenConnection();
             }
         }
 
@@ -27,7 +29,7 @@ namespace Todo.Repository
             {
                 string sQuery = "INSERT INTO TodoItems (Title, Description, Completed)"
                                 + " VALUES(@Title, @Description, @Completed); SELECT CAST(SCOPE_IDENTITY() as int)";
-                dbConnection.Open();
+                //dbConnection.Open();
                 //var itemId = dbConnection.Execute(sQuery, item)
                 var result = dbConnection.Query<int>(sQuery, item).First();
                 item.ItemId = result;
@@ -39,7 +41,7 @@ namespace Todo.Repository
         {
             using (IDbConnection dbConnection = Connection)
             {
-                dbConnection.Open();
+                //dbConnection.Open();
                 return dbConnection.Query<TodoItem>("SELECT * FROM TodoItems");
             }
         }
@@ -51,7 +53,7 @@ namespace Todo.Repository
                 string sQuery = "SELECT * FROM TodoItems"
                            + " WHERE ItemId = @Id";
 
-                dbConnection.Open();
+                //dbConnection.Open();
                 return dbConnection.Query<TodoItem>(sQuery, new { Id = id }).FirstOrDefault();
             }
         }
@@ -62,7 +64,7 @@ namespace Todo.Repository
             {
                 string sQuery = "DELETE FROM TodoItems"
                                 + " WHERE ItemId = @Id";
-                dbConnection.Open();
+                //dbConnection.Open();
                 dbConnection.Execute(sQuery, new { Id = id });
             }
         }
@@ -75,7 +77,7 @@ namespace Todo.Repository
                            + " Description = @Description, Completed= @Completed"
                            + " WHERE ItemId = @ItemId";
 
-                dbConnection.Open();
+                //dbConnection.Open();
                 dbConnection.Query(sQuery, item);
             }
         }

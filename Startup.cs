@@ -39,6 +39,8 @@ namespace Todo
             builder.RegisterType<TodoRepository>().As<ITodoRepository>();
             this.ApplicationContainer = builder.Build();
 
+            services.AddSingleton(_ => Configuration);
+
             // Create the IServiceProvider based on the container.
             return new AutofacServiceProvider(this.ApplicationContainer);
 
