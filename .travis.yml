@@ -3,6 +3,7 @@ mono: none
 dotnet: 2.2.104
 solution: Todo.sln
 install:
+  - sudo apt-get install -y dpkg
   - dotnet restore
 script:
   - dotnet build
