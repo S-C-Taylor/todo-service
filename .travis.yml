@@ -2,7 +2,7 @@ language: csharp
 mono: none
 script:
   - sudo apt-get install -y dpkg
-dotnet: 2.2.104
+dotnet: 2.2.100
 solution: Todo.sln
 install:
   - dotnet restore
