@@ -1,6 +1,7 @@
-- sudo apt-get install -y dpkg
 language: csharp
 mono: none
+script:
+  - sudo apt-get install -y dpkg
 dotnet: 2.2.104
 solution: Todo.sln
 install:
