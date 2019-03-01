@@ -3,11 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using Todo.Models;
+using Todo.API.Models;
 using System;
 using Microsoft.Extensions.Configuration;
 
-namespace Todo.Repository
+namespace Todo.API.Repository
 {
     public class TodoRepository : BaseRepository, ITodoRepository {
 

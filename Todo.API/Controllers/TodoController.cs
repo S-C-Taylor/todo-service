@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Todo.Models;
-using Todo.Repository;
+using Todo.API.Models;
+using Todo.API.Repository;
 
-namespace Todo.Controllers
+namespace Todo.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,21 +21,27 @@ namespace Todo.Controllers
 
         // GET api/todo
         [HttpGet]
-        public ActionResult<IEnumerable<TodoItem>> Get()
+        public async Task<IActionResult> Get()
         {
             return Ok(_todoRepository.GetAll());
         }
 
         // GET api/todo/5
         [HttpGet("{id}")]
-        public ActionResult<TodoItem> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return _todoRepository.GetByID(id);
+            var item = _todoRepository.GetByID(id);
+            
+            if (item != null) {
+                return Ok(item);
+            } else {
+                return NotFound();
+            }
         }
 
         // POST api/todo
         [HttpPost]
-        public ActionResult<TodoItem> Post([FromBody] TodoItem item)
+        public async Task<IActionResult> Post([FromBody] TodoItem item)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -46,7 +52,7 @@ namespace Todo.Controllers
 
         // PUT api/todo/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] TodoItem item)
+        public async Task<IActionResult> Put(int id, [FromBody] TodoItem item)
         {
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
@@ -58,7 +64,7 @@ namespace Todo.Controllers
 
         // DELETE api/todo/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (_todoRepository.GetByID(id) != null) {
                 _todoRepository.Delete(id);

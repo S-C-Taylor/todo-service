@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Dapper;
 
-namespace Todo.Models {
+namespace Todo.API.Models {
     public class TodoItem {
 
     [Key]

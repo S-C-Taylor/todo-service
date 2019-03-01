@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Todo.Models;
+using Todo.API.Models;
 
-namespace Todo.Repository
+namespace Todo.API.Repository
 {
     public interface ITodoRepository
     {

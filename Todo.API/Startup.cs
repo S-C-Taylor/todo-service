@@ -10,11 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Todo.Repository;
+using Todo.API.Repository;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
-namespace Todo
+namespace Todo.API
 {
     public class Startup
     {
