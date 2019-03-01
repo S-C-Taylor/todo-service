@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Todo.Repository {
+namespace Todo.API.Repository {
     public class BaseRepository {
         private readonly IConfiguration config;
 
