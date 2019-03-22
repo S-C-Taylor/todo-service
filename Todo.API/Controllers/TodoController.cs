@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Todo.API.Models;
 using Todo.API.Repository;
@@ -40,20 +41,32 @@ namespace Todo.API.Controllers
         }
 
         // POST api/todo
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem item)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            item.CreatedBy = HttpContext.User.Identity.Name;
             
             var newItem = _todoRepository.Add(item);
             return Ok(newItem);
         }
 
         // PUT api/todo/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] TodoItem item)
         {
+            if (_todoRepository.GetByID(id) == null) {
+                return NotFound();
+            }
+
+            if (_todoRepository.GetByID(id).CreatedBy != HttpContext.User.Identity.Name) {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
@@ -63,12 +76,15 @@ namespace Todo.API.Controllers
         }
 
         // DELETE api/todo/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (_todoRepository.GetByID(id) != null) {
                 _todoRepository.Delete(id);
                 return Ok();
+            } else if (_todoRepository.GetByID(id).CreatedBy != HttpContext.User.Identity.Name) {
+                return Unauthorized();
             } else {
                 return NotFound();
             }

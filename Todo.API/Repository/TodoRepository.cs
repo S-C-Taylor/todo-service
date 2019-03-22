@@ -26,8 +26,8 @@ namespace Todo.API.Repository
         public TodoItem Add (TodoItem item) {
             using (IDbConnection dbConnection = Connection)
             {
-                string sQuery = "INSERT INTO TodoItems (Title, Description, Completed)"
-                                + " VALUES(@Title, @Description, @Completed); SELECT CAST(SCOPE_IDENTITY() as int)";
+                string sQuery = "INSERT INTO TodoItems (Title, Description, Completed, CreatedBy)"
+                                + " VALUES(@Title, @Description, @Completed, @CreatedBy); SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 var result = dbConnection.Query<int>(sQuery, item).First();
                 item.ItemId = result;

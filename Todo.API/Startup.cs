@@ -13,6 +13,9 @@ using Microsoft.Extensions.Options;
 using Todo.API.Repository;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Todo.API
 {
@@ -32,11 +35,26 @@ namespace Todo.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            //JWT Authentication support
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySecretKey010203"))
+                        };
+                    });
+
             // Create the container builder.
             var builder = new ContainerBuilder();
 
             builder.Populate(services);
             builder.RegisterType<TodoRepository>().As<ITodoRepository>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
             this.ApplicationContainer = builder.Build();
 
             services.AddSingleton(_ => Configuration);
@@ -61,6 +79,7 @@ namespace Todo.API
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
